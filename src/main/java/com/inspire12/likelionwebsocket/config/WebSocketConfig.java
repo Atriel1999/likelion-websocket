@@ -3,6 +3,7 @@ package com.inspire12.likelionwebsocket.config;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inspire12.likelionwebsocket.handshake.CustomHandshakeHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
@@ -22,10 +23,17 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final CustomHandshakeHandler customHandshakeHandler;
+
+    public WebSocketConfig(CustomHandshakeHandler customHandshakeHandler) {
+        this.customHandshakeHandler = customHandshakeHandler;
+    }
+
 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket")
                 .setAllowedOrigins("*")
+//                .setHandshakeHandler(customHandshakeHandler)
                 .withSockJS();
 
     }
