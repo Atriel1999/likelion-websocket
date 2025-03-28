@@ -1,23 +1,30 @@
 package com.inspire12.likelionwebsocket.controller;
 
 import com.inspire12.likelionwebsocket.model.ChatMessage;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import com.inspire12.likelionwebsocket.service.StompMessagingService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ChatAdminController {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final StompMessagingService stompMessagingService;
 
-    public ChatAdminController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    public ChatAdminController(StompMessagingService stompMessingService) {
+        this.stompMessagingService = stompMessingService;
     }
 
     @PostMapping("/call")
-    public ChatMessage chatMessage(@RequestBody ChatMessage chatMessage) {
-        messagingTemplate.convertAndSend("/topic/public", chatMessage);
+    public ChatMessage call(@RequestBody ChatMessage chatMessage) {
+        stompMessagingService.sendToTopic(chatMessage);
+        return chatMessage;
+    }
+
+    @PostMapping("/call/user")
+    public ChatMessage callUser(@RequestParam String username, @RequestBody ChatMessage chatMessage) {
+        stompMessagingService.sendToUser(username, chatMessage);
         return chatMessage;
     }
 }

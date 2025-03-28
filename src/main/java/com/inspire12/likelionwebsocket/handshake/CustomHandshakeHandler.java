@@ -14,7 +14,7 @@ public class CustomHandshakeHandler extends DefaultHandshakeHandler {
                                       WebSocketHandler wsHandler,
                                       Map<String, Object> attributes) {
         String token = getTokenFromRequest(request);
-        System.out.println("token: " + token);
+
         if (token != null) {
             return () -> token; // JWT토큰 검증하고 유저이름 추출하고.. 하는거 생략
         }
@@ -25,6 +25,7 @@ public class CustomHandshakeHandler extends DefaultHandshakeHandler {
     private String getTokenFromRequest(ServerHttpRequest request) {
         // URL 파라미터에서 토큰 추출
         String query = request.getURI().getQuery();
+        System.out.println("query: " + query);
         if (query != null && query.contains("token=")) {
             return query.split("token=")[1];
         }
